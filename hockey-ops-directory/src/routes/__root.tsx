@@ -1,6 +1,8 @@
+// Root layout: shared shell with Outlet for all hockey ops routes
 import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
+import { AppNav } from '../components/AppNav'
 import appCss from '../styles.css?url'
 
 export const Route = createRootRoute({
@@ -24,12 +26,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         <header>
           <h1>Hockey Ops Directory</h1>
-          <nav>
-            <a href="/">Home</a> |{' '}
-            <a href="/players">Players</a> |{' '}
-            <a href="/games">Games</a>
-          </nav>
         </header>
+        <AppNav />
         <main>
           <Outlet />
         </main>
@@ -41,4 +39,4 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </body>
     </html>
   )
-}// Root layout: shared shell with Outlet for all hockey ops routes
+}
