@@ -1,3 +1,4 @@
+// Root layout: shared shell with Outlet for all hockey ops routes 
 import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
@@ -41,4 +42,4 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </body>
     </html>
   )
-}// Root layout: shared shell with Outlet for all hockey ops routes
+}
