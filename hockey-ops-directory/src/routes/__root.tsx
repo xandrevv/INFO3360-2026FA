@@ -41,4 +41,4 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </body>
     </html>
   )
-}
+}// Root layout: shared shell with Outlet for all hockey ops routes
