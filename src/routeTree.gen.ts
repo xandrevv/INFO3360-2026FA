@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GamesIndexRouteImport } from './routes/games/index'
 import { Route as PlayersIndexRouteImport } from './routes/players/index'
+import { Route as PlayersPlayerIDRouteImport } from './routes/players/$playerID'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,33 +29,42 @@ const PlayersIndexRoute = PlayersIndexRouteImport.update({
   path: '/players/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlayersPlayerIDRoute = PlayersPlayerIDRouteImport.update({
+  id: '/players/$playerID',
+  path: '/players/$playerID',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/players/$playerID': typeof PlayersPlayerIDRoute
   '/games/': typeof GamesIndexRoute
   '/players/': typeof PlayersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/players/$playerID': typeof PlayersPlayerIDRoute
   '/games': typeof GamesIndexRoute
   '/players': typeof PlayersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/players/$playerID': typeof PlayersPlayerIDRoute
   '/games/': typeof GamesIndexRoute
   '/players/': typeof PlayersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/games/' | '/players/'
+  fullPaths: '/' | '/players/$playerID' | '/games/' | '/players/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/games' | '/players'
-  id: '__root__' | '/' | '/games/' | '/players/'
+  to: '/' | '/players/$playerID' | '/games' | '/players'
+  id: '__root__' | '/' | '/players/$playerID' | '/games/' | '/players/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PlayersPlayerIDRoute: typeof PlayersPlayerIDRoute
   GamesIndexRoute: typeof GamesIndexRoute
   PlayersIndexRoute: typeof PlayersIndexRoute
 }
@@ -82,11 +92,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlayersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/players/$playerID': {
+      id: '/players/$playerID'
+      path: '/players/$playerID'
+      fullPath: '/players/$playerID'
+      preLoaderRoute: typeof PlayersPlayerIDRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PlayersPlayerIDRoute: PlayersPlayerIDRoute,
   GamesIndexRoute: GamesIndexRoute,
   PlayersIndexRoute: PlayersIndexRoute,
 }
