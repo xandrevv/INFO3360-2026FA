@@ -1,4 +1,4 @@
-# Scaffold Notes — Hockey Ops Player Directory
+# Scaffold Notes — Hockey Ops Player Directory for Step 3
 
 ## What we generated
 - TanStack Start app with React, TypeScript, Vite, and Tailwind CSS
