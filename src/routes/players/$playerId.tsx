@@ -1,7 +1,9 @@
+//playerid.tsx
+ 
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { parsePlayerIdParam } from '../../lib/playerParams'
 
-export const Route = createFileRoute('/players/$playerID')({
+export const Route = createFileRoute('/players/$playerId')({
   params: {
     parse: (raw) => ({
       playerId: parsePlayerIdParam(raw.playerId),
