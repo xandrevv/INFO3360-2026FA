@@ -35,13 +35,31 @@ function GamesIndexPage() {
         {' · '}
         <Link to="/games" search={{ team: '', date: '' }}>Reset</Link>
       </nav>
-      <ul className="mt-4 list-disc space-y-1 pl-5 text-slate-700">
-        {games.map((g) => (
-          <li key={g.id}>
-            {g.venue === 'home' ? 'vs' : '@'} {g.opponent} — {g.date} ({g.status})
-          </li>
-        ))}
-      </ul>
+      {games.length === 0 ? (
+        <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <p className="text-slate-700">No games match the current filters.</p>
+          <Link
+            to="/games"
+            search={{ team: '', date: '' }}
+            className="mt-2 block text-blue-700 underline"
+          >
+            Clear filters
+          </Link>
+        </div>
+      ) : (
+        <ul className="mt-4 list-disc space-y-1 pl-5 text-slate-700">
+          {games.map((g) => (
+            <li key={g.id}>
+              {g.venue === 'home' ? 'vs' : '@'} {g.opponent} — {g.date} ({g.status})
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="mt-6">
+        <Link to="/players" className="text-blue-700 underline">
+          ← Back to players
+        </Link>
+      </div>
     </main>
   )
 }

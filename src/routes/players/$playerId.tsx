@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { parsePlayerIdParam } from '../../lib/playerParams'
 import { getPlayerById } from '../../server/directoryLoader'
+import { NotFoundPlayer } from '../../components/NotFoundPlayer'
 
 export const Route = createFileRoute('/players/$playerId')({
   params: {
@@ -21,11 +22,7 @@ function PlayerDetailPage() {
   if (!player) {
     return (
       <main className="mx-auto max-w-3xl p-6">
-        <p className="mb-4 text-sm">
-          <Link to="/players" className="text-blue-700 underline">← Back to players</Link>
-        </p>
-        <h1 className="text-2xl font-semibold">Player not found</h1>
-        <p className="mt-2 text-slate-600">No player found with id: {playerId}</p>
+        <NotFoundPlayer playerId={playerId} />
       </main>
     )
   }
@@ -33,14 +30,27 @@ function PlayerDetailPage() {
   return (
     <main className="mx-auto max-w-3xl p-6">
       <p className="mb-4 text-sm">
-        <Link to="/players" className="text-blue-700 underline">← Back to players</Link>
+        <Link to="/players" className="text-blue-700 underline">
+          ← Back to players
+        </Link>
       </p>
-      <h1 className="text-2xl font-semibold">#{player.number} {player.name}</h1>
+      <h1 className="text-2xl font-semibold">
+        #{player.number} {player.name}
+      </h1>
       <dl className="mt-4 space-y-2 text-slate-700">
         <div><dt className="font-medium">Position</dt><dd>{player.position}</dd></div>
         <div><dt className="font-medium">Team</dt><dd>{player.team}</dd></div>
         <div><dt className="font-medium">Status</dt><dd>{player.status}</dd></div>
       </dl>
+      <div className="mt-6">
+        <Link
+          to="/games"
+          search={{ team: '', date: '' }}
+          className="text-blue-700 underline"
+        >
+          View games schedule →
+        </Link>
+      </div>
     </main>
   )
 }
