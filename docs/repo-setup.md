@@ -8,20 +8,31 @@
 
 ## 1. Ignore rules in place before first commit
 
+`.gitignore` contents:
 ```text
-node_modules/
-dist/
-.output/
-.vinxi/
-.vercel/
-.env
-.env.local
-.env.*.local
+node_modules
 .DS_Store
-*.log
+dist
+dist-ssr
+*.local
+.env
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+__unconfig*
+todos.json
 ```
 
 `.gitignore` existed before my first commit: YES
+
+Why `.gitignore` must come before the first commit: Git only ignores
+files that are not already tracked. If you commit `node_modules/` or
+`.env` before `.gitignore` exists, those files enter history permanently
+— deleting them later does not remove them from past snapshots. Writing
+`.gitignore` first means secrets and build output never enter history
+at all.
 
 ## 2. Repository initialized
 
@@ -31,6 +42,12 @@ git branch --show-current — main
 ```
 
 ## 3. Pre-stage status review
+
+```text
+On branch main
+Your branch is up to date with 'origin/main'.
+nothing to commit, working tree clean
+```
 
 - `node_modules/` absent from tracked files: PASS
 - `.env` / `.env.local` absent from tracked files: PASS
@@ -47,6 +64,15 @@ git branch --show-current — main
 origin  https://github.com/xandrevv/INFO3360-2026FA.git (fetch)
 origin  https://github.com/xandrevv/INFO3360-2026FA.git (push)
 ```
+
+What `origin` means: `origin` is the name Git gives to the remote
+copy of the repository — in this case the copy stored on GitHub. It is
+just a shorthand so you do not have to type the full URL every time.
+
+What `-u` did in `git push -u origin main`: the `-u` flag sets the
+upstream tracking link between the local `main` branch and `origin/main`
+on GitHub. After running it once, future pushes only need `git push`
+with no extra arguments.
 
 - `git push -u origin main` completed without error: PASS
 
@@ -67,6 +93,6 @@ origin  https://github.com/xandrevv/INFO3360-2026FA.git (push)
 
 ## 8. Ready for Sprint 2
 
-Sprint 2 will add env-variable separation and commit `.env.example`. My repository
-is ready for that because ignore rules are already in place and no secret has ever
-been committed: YES
+Sprint 2 will add env-variable separation and commit `.env.example`. My
+repository is ready for that because ignore rules are already in place
+and no secret has ever been committed: YES
