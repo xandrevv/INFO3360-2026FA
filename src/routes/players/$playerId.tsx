@@ -1,38 +1,46 @@
-//playerid.tsx
- 
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { parsePlayerIdParam } from '../../lib/playerParams'
+import { getPlayerById } from '../../server/directoryLoader'
 
 export const Route = createFileRoute('/players/$playerId')({
   params: {
-    parse: (raw) => ({
-      playerId: parsePlayerIdParam(raw.playerId),
-    }),
-    stringify: ({ playerId }) => ({
-      playerId: String(playerId),
-    }),
+    parse: (raw) => ({ playerId: parsePlayerIdParam(raw.playerId) }),
+    stringify: ({ playerId }) => ({ playerId: String(playerId) }),
+  },
+  loader: async ({ params }) => {
+    const player = getPlayerById(params.playerId)
+    return { player }
   },
   component: PlayerDetailPage,
 })
 
 function PlayerDetailPage() {
   const { playerId } = Route.useParams()
+  const { player } = Route.useLoaderData()
+
+  if (!player) {
+    return (
+      <main className="mx-auto max-w-3xl p-6">
+        <p className="mb-4 text-sm">
+          <Link to="/players" className="text-blue-700 underline">← Back to players</Link>
+        </p>
+        <h1 className="text-2xl font-semibold">Player not found</h1>
+        <p className="mt-2 text-slate-600">No player found with id: {playerId}</p>
+      </main>
+    )
+  }
 
   return (
     <main className="mx-auto max-w-3xl p-6">
       <p className="mb-4 text-sm">
-        <Link to="/players" className="text-blue-700 underline">
-          ← Back to players
-        </Link>
+        <Link to="/players" className="text-blue-700 underline">← Back to players</Link>
       </p>
-      <h1 className="text-2xl font-semibold">Player detail</h1>
-      <p className="mt-2 text-gray-700">
-        Bookmarkable sheet for player{' '}
-        <span className="font-mono font-medium">{playerId}</span>
-      </p>
-      <p className="mt-4 text-sm text-gray-500">
-        Roster fields and server-loaded stats land in a later step.
-      </p>
+      <h1 className="text-2xl font-semibold">#{player.number} {player.name}</h1>
+      <dl className="mt-4 space-y-2 text-slate-700">
+        <div><dt className="font-medium">Position</dt><dd>{player.position}</dd></div>
+        <div><dt className="font-medium">Team</dt><dd>{player.team}</dd></div>
+        <div><dt className="font-medium">Status</dt><dd>{player.status}</dd></div>
+      </dl>
     </main>
   )
 }

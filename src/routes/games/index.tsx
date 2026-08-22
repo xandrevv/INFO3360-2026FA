@@ -1,24 +1,24 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { validateGamesSearch, type GamesSearch } from '../../lib/searchSchemas'
+import { listGames } from '../../server/directoryLoader'
 
 export const Route = createFileRoute('/games/')({
   validateSearch: (search: Record<string, unknown>): GamesSearch =>
     validateGamesSearch(search),
+  loader: async () => {
+    const games = listGames()
+    return { games }
+  },
   component: GamesIndexPage,
 })
 
-const demoGames = [
-  { id: '1', home: 'TOR', away: 'MTL', date: '2026-10-01' },
-  { id: '2', home: 'VAN', away: 'CGY', date: '2026-10-02' },
-  { id: '3', home: 'TOR', away: 'OTT', date: '2026-10-03' },
-]
-
 function GamesIndexPage() {
+  const { games: allGames } = Route.useLoaderData()
   const { team, date } = Route.useSearch()
 
-  const filtered = demoGames.filter(
+  const games = allGames.filter(
     (g) =>
-      (!team || g.home === team || g.away === team) &&
+      (!team || g.opponent.toUpperCase().includes(team.toUpperCase())) &&
       (!date || g.date === date),
   )
 
@@ -29,14 +29,16 @@ function GamesIndexPage() {
         Active filters: team={team || 'all'}, date={date || 'all'}
       </p>
       <nav className="mt-4 flex gap-3 text-sm">
-        <Link to="/games" search={{ team: 'TOR', date }}>TOR games</Link>
-        <Link to="/games" search={{ team: 'VAN', date }}>VAN games</Link>
+        <Link to="/games" search={{ team: 'North Bay', date }}>North Bay</Link>
+        {' · '}
+        <Link to="/games" search={{ team: 'River City', date }}>River City</Link>
+        {' · '}
         <Link to="/games" search={{ team: '', date: '' }}>Reset</Link>
       </nav>
       <ul className="mt-4 list-disc space-y-1 pl-5 text-slate-700">
-        {filtered.map((g) => (
+        {games.map((g) => (
           <li key={g.id}>
-            {g.home} vs {g.away} — {g.date}
+            {g.venue === 'home' ? 'vs' : '@'} {g.opponent} — {g.date} ({g.status})
           </li>
         ))}
       </ul>

@@ -1,22 +1,21 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { validatePlayersSearch, type PlayersSearch } from '../../lib/searchSchemas'
+import { listPlayers } from '../../server/directoryLoader'
 
 export const Route = createFileRoute('/players/')({
   validateSearch: (search: Record<string, unknown>): PlayersSearch =>
     validatePlayersSearch(search),
+  loader: async ({ context }) => {
+    return { players: listPlayers() }
+  },
   component: PlayersIndexPage,
 })
 
-const demoPlayers = [
-  { id: '42', name: 'Avery Skater', position: 'F', status: 'active' },
-  { id: '7', name: 'Riley Goalie', position: 'G', status: 'active' },
-  { id: '11', name: 'Casey Defense', position: 'D', status: 'ir' },
-]
-
 function PlayersIndexPage() {
+  const { players: allPlayers } = Route.useLoaderData()
   const { position, status } = Route.useSearch()
 
-  const filtered = demoPlayers.filter(
+  const players = allPlayers.filter(
     (p) =>
       (position === 'all' || p.position === position) &&
       (status === 'all' || p.status === status),
@@ -30,19 +29,22 @@ function PlayersIndexPage() {
       </p>
       <nav className="mt-4 flex gap-3 text-sm">
         <Link to="/players" search={{ position: 'F', status }}>Forwards</Link>
+        {' · '}
         <Link to="/players" search={{ position: 'D', status }}>Defense</Link>
+        {' · '}
         <Link to="/players" search={{ position: 'G', status }}>Goalies</Link>
+        {' · '}
         <Link to="/players" search={{ position: 'all', status: 'active' }}>Reset</Link>
       </nav>
       <ul className="mt-4 list-disc space-y-1 pl-5 text-slate-700">
-        {filtered.map((p) => (
+        {players.map((p) => (
           <li key={p.id}>
             <Link
               to="/players/$playerId"
               params={{ playerId: p.id }}
               className="text-blue-700 underline"
             >
-              {p.name} ({p.position})
+              #{p.number} {p.name} ({p.position})
             </Link>
           </li>
         ))}
